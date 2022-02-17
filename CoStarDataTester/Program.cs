@@ -12,21 +12,21 @@ namespace CoStarDataTester
         {
 
             //Costar ---------------------------------
-            //CoStarTester.CostarPointsFiles(); //add check for unique variable IDS first.
-            //CoStarTester.CostarPointsFilesManualCheck();
+            USAnnualDeliverableTester.CostarPointsFiles(); //add check for unique variable IDS first.
+            USAnnualDeliverableTester.CostarPointsFilesManualCheck();
 
             //CoStarTester.CostarAreaFiles();
-            CoStarTester.CostarAreaFilesManualCheck();
-            //CoStarTester.CostarAreaFilesSummaries(); //sums total variable values.. should be less than or eqaul to national totals.
+            USAnnualDeliverableTester.CostarAreaFilesManualCheck();
+            USAnnualDeliverableTester.CostarAreaFilesSummaries(); //sums total variable values.. should be less than or eqaul to national totals.
 
-            //CoStarTester.CoStarUSManualTestGapFile();
+            USAnnualDeliverableTester.CoStarUSManualTestGapFile();
 
-            //CoStarTester.CostarSumDataColumns();
+            USAnnualDeliverableTester.CostarSumDataColumns();
 
             // CoStar Canada --------------------------------
-            //CoStarTester.CostarCanadaTestGapFile();
-            //CoStarTester.CostarCanadaManualTestGapfile();
-            //CoStarTester.CostarCanadaReformatNightlyFeedOutput();
+            CanadaAnnualDeliverableTester.CostarCanadaTestGapFile();
+            CanadaAnnualDeliverableTester.CostarCanadaManualTestGapfile();
+            CanadaAnnualDeliverableTester.CostarCanadaReformatNightlyFeedOutput();
         }
     }
 }
