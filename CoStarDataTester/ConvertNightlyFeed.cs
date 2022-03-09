@@ -12,20 +12,7 @@ namespace CoStarDataTester
 {
     public class ConvertNightlyFeed
     {
-
-        // read nightly feed file by variable list. 
-        //use counter to split out into smaller files.
-
-
-        // get nightly feed file.
-        // get variable lists
-        // for each variable list. open and close nightly feed file.
-        // count number of unieuq sites added to file.
-        // save then open new file when counter is reached.
-
-        // clear memory of dictionary values.
-
-        // file format
+        // GAP file format
         //PropertyID|Latitude|Longitude|VariableID|Radius1Amount|Radius2Amount|Radius3Amount|Radius4Amount|Radius5Amount
 
 
@@ -65,6 +52,11 @@ namespace CoStarDataTester
 
             using (StreamReader gapdata = new StreamReader(gapfile))
             {
+                // output to multifiles
+                const int sitesplitamount = 2000;
+                int filecount = 0;
+
+                //begin read
                 string header = gapdata.ReadLine();
 
                 int radii1 = FunctionTools.ColumnIndexNew(header, gapdeli, "Radius1Amount", txtq); //returns 0 based index.
@@ -90,7 +82,6 @@ namespace CoStarDataTester
                     string[] splitline = line.Split(gapdeli);
                     string siteid = splitline[propertyid];
                     string linevariable = splitline[variableid];
-
 
                     if (variables.Contains(linevariable) && !sitedata.ContainsKey(siteid)) // doesnt contain siteid or variableid
                     {
@@ -130,27 +121,86 @@ namespace CoStarDataTester
                         // save the site id and lat lon
                         sitelatlondata.Add(siteid, latlons);
                     }
+
+                    // write
+                    if (sitedata.Count == sitesplitamount + 1)
+                    {
+                        //temp dict
+                        Dictionary<string, Dictionary<string, List<string>>> tempsitedata = new Dictionary<string, Dictionary<string, List<string>>>();
+
+                        foreach (var s in sitedata.Keys)
+                        {
+                            if (sitedata[s].Count == variables.Count)
+                            {
+                                tempsitedata.Add(s, sitedata[s]);
+                            }
+                        }
+
+                        //new file.
+                        filecount++;
+
+                        // output file definitions
+                        string outputfile = Path.GetDirectoryName(gapfile) + "\\" + outputname + $"_output_{filecount}.txt";
+                        char outputfiledelimiter = ',';
+
+                        //write out 2k sites to new file.
+                        WriteOutReadSiteData(tempsitedata, sitelatlondata, variables, outputfile, outputfiledelimiter);
+
+                        //clear dictionaries
+                        foreach (var s in tempsitedata.Keys)
+                        {
+                            sitedata.Remove(s);
+                            sitelatlondata.Remove(s);
+                        }
+                    }
+                }
+
+                // if end of file is reached.
+                if (line == null)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("EOF reached.");
+                    Console.WriteLine($"Sites left to write: {sitedata.Count}");
+
+                    //temp dict
+                    Dictionary<string, Dictionary<string, List<string>>> tempsitedata = new Dictionary<string, Dictionary<string, List<string>>>();
+
+                    foreach (var s in sitedata.Keys)
+                    {
+                        if (sitedata[s].Count == variables.Count)
+                        {
+                            tempsitedata.Add(s, sitedata[s]);
+                        }
+                    }
+
+                    //new file.
+                    filecount++;
+
+                    // output file definitions
+                    string outputfile = Path.GetDirectoryName(gapfile) + "\\" + outputname + $"_output_{filecount}.txt";
+                    char outputfiledelimiter = ',';
+
+                    //write out 2k sites to new file.
+                    WriteOutReadSiteData(tempsitedata, sitelatlondata, variables, outputfile, outputfiledelimiter);
+
+                    //clear dictionaries
+                    //foreach (var s in tempsitedata.Keys)
+                    //{
+                    //    sitedata.Remove(s);
+                    //    sitelatlondata.Remove(s);
+                    //}
                 }
             }
+        }
 
-            // show counts.
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine($"Sites with Data: {sitedata.Count}");
-            Console.WriteLine($"Total variables read: {variables.Count}");
-            Console.WriteLine();
-            Console.ResetColor();
 
-            // output to multifiles
-            const int sitesplitamount = 2000;
-            int sitesplitcount = sitesplitamount;
-            int filecount = 0;
-
+        private static void WriteOutReadSiteData(Dictionary<string, Dictionary<string, List<string>>> sitedata, Dictionary<string, List<string>> sitelatlondata, List<string> variables, string outputfile, char outputfiledelimiter)
+        {
             // file header.
             List<string> headerbuilder = new List<string>();
 
             string[] headertofill = { "AREA_ID", "ID", "RING", "RING_DEFN", "LAT", "LON" };
-            
+
             foreach (var item in headertofill)
             {
                 headerbuilder.Add(item);
@@ -161,9 +211,8 @@ namespace CoStarDataTester
                 headerbuilder.Add(item);
             }
 
-            // output file definitions
-            string outputfile = Path.GetDirectoryName(gapfile) + "\\" + outputname + $"_output_{filecount}.txt";
-            char outputfiledelimiter = ',';
+            //write header
+            File.AppendAllText(outputfile, string.Join(outputfiledelimiter.ToString(), headerbuilder.ToArray()) + Environment.NewLine); 
 
             foreach (var s in sitedata.Keys) //loop through keys
             {
@@ -174,37 +223,22 @@ namespace CoStarDataTester
                 // get current siteidinfo
                 Dictionary<string, List<string>> tempsitedict = sitedata[s]; //all site info for target site
 
-                // start looop
-                if (sitesplitcount == sitesplitamount)
+                for (int x = 0; x <= 4; x++) // for each radii 0-4. these will be the lines that we output.
                 {
-                    outputfile = Path.GetDirectoryName(gapfile) + "\\" + outputname + $"_output_{filecount}.txt";
-                    File.AppendAllText(outputfile, string.Join(outputfiledelimiter.ToString(), headerbuilder.ToArray()) + Environment.NewLine); //write header
-
-                    filecount++; // create new file "_output_1.txt
-                }
-
-                if (sitesplitcount > 0) //wite to file until 0 count is reached. rename write file and begin again.
-                {
-                    for (int x = 0; x <= 4; x++) // for each radii 0-4. these will be the lines that we output.
-                    {
-                        BuildSiteOutputLine(s, outputfile, outputfiledelimiter, tempsitedict, variables, lat, lon, x);
-                    }
-
-                    sitesplitcount--;
-                }
-                
-                if (sitesplitcount == 0) //end. reset.
-                {
-                    // append current site
-                    for (int x = 0; x <= 4; x++) // for each radii 0-4. these will be the lines that we output.
-                    {
-                        BuildSiteOutputLine(s, outputfile, outputfiledelimiter, tempsitedict, variables, lat, lon, x);
-                    }
-
-                    sitesplitcount = sitesplitamount;
+                    BuildSiteOutputLine(s, outputfile, outputfiledelimiter, tempsitedict, variables, lat, lon, x);
                 }
             }
+
+            // show counts.
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"File created: {outputfile}");
+            Console.WriteLine($"Site written: {sitedata.Count}");
+            Console.WriteLine($"Variables: {variables.Count}");
+            Console.WriteLine();
+            Console.ResetColor();
         }
+
 
         private static void BuildSiteOutputLine(string siteid, string filepath, char delimiter, Dictionary<string, List<string>> siteinfo, List<string> variables, string lat, string lon, int radii)
         {
