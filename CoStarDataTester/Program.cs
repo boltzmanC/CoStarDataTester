@@ -16,21 +16,24 @@ namespace CoStarDataTester
         {
 
             //Costar ---------------------------------
-            USAnnualDeliverableTester.CostarPointsFiles(); //add check for unique variable IDS first.
-            USAnnualDeliverableTester.CostarPointsFilesManualCheck();
+            //USAnnualDeliverableTester.CostarPointsFiles(); //add check for unique variable IDS first.
+            //USAnnualDeliverableTester.CostarPointsFilesManualCheck();
 
             //CoStarTester.CostarAreaFiles();
-            USAnnualDeliverableTester.CostarAreaFilesManualCheck();
-            USAnnualDeliverableTester.CostarAreaFilesSummaries(); //sums total variable values.. should be less than or eqaul to national totals.
+            //USAnnualDeliverableTester.CostarAreaFilesManualCheck();
+            //USAnnualDeliverableTester.CostarAreaFilesSummaries(); //sums total variable values.. should be less than or eqaul to national totals.
 
-            USAnnualDeliverableTester.CoStarUSManualTestGapFile();
+            //USAnnualDeliverableTester.CoStarUSManualTestGapFile();
 
-            USAnnualDeliverableTester.CostarSumDataColumns();
+            //USAnnualDeliverableTester.CostarSumDataColumns();
 
             // CoStar Canada --------------------------------
-            CanadaAnnualDeliverableTester.CostarCanadaTestGapFile();
-            CanadaAnnualDeliverableTester.CostarCanadaManualTestGapfile();
-            CanadaAnnualDeliverableTester.CostarCanadaReformatNightlyFeedOutput();
+            //CanadaAnnualDeliverableTester.CostarCanadaTestGapFile();
+            //CanadaAnnualDeliverableTester.CostarCanadaManualTestGapfile();
+            //CanadaAnnualDeliverableTester.CostarReformatNightlyFeedOutput();
+
+            //nightly feed reformat
+            ConvertNightlyFeed.CoStarMultiFileReformatNightlyFeed();
         }
     }
 }

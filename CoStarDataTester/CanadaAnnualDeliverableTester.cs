@@ -486,7 +486,7 @@ namespace CoStarDataTester
             }
         }
 
-        public static void CostarCanadaReformatNightlyFeedOutput()
+        public static void CostarReformatNightlyFeedOutput()
         {
             // Reformat the output of the CoStar Nightly feed files
             // Will work for either nightly files or "gap deliverable files". 
@@ -601,7 +601,7 @@ namespace CoStarDataTester
                 }
 
                 // output DICT values to new file.
-                string newfile = FunctionTools.GetDesktopDirectory() + "\\" + outputname + "_output.txt";
+                string newfile = Path.GetDirectoryName(gapfile) + "\\" + outputname + "_output.txt";
 
                 using (StreamWriter outfile = new StreamWriter(newfile))
                 {

@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CanadaAnnualDeliverableTester.cs" />
+    <Compile Include="ConvertNightlyFeed.cs" />
     <Compile Include="USAnnualDeliverableTester.cs" />
     <Compile Include="FunctionTools.cs" />
     <Compile Include="Program.cs" />
