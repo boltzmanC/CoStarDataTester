@@ -314,16 +314,31 @@ namespace CoStarDataTester
 
 
 
-        // Settings
-        public static void ConsoleSettings()
+        //introduction
+        public static void Introduction()
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("CoStar Data Tester for Annual Deliverables by Dylan White");
+            Console.WriteLine();
+            Console.ResetColor();
+        }
+
+        //console size.
+        public static void ConsoleSize()
+        {
+            //setconsole size
             Console.SetWindowSize(150, 45);
             int bufferwidth = Console.BufferWidth;
             int bufferheight = 600;
             Console.SetBufferSize(bufferwidth, bufferheight);
         }
 
-
+        // exit
+        public static void ExitApp()
+        {
+            //Console.ReadKey();
+            Environment.Exit(0);
+        }
 
 
     }
