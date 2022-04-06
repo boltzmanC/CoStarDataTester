@@ -47,8 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CanadaAnnualDeliverableTester.cs" />
-    <Compile Include="ConvertNightlyFeed.cs" />
+    <Compile Include="AdditionalTestCases.cs" />
+    <Compile Include="AreaFilesTester.cs" />
+    <Compile Include="NightlyFeedTester.cs" />
     <Compile Include="USAnnualDeliverableTester.cs" />
     <Compile Include="FunctionTools.cs" />
     <Compile Include="Program.cs" />
